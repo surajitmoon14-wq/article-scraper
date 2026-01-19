@@ -35,11 +35,11 @@ export function ScraperForm({ onScrape, isLoading }: ScraperFormProps) {
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Scrape New Article</h2>
+      <h2 className="text-lg font-semibold text-gray-900 mb-4">Extract New Article</h2>
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
         <div className="flex-grow">
           <Input
-            placeholder="https://example.com/article-url"
+            placeholder="https://www.theguardian.com/article-url"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             error={error}
@@ -52,11 +52,11 @@ export function ScraperForm({ onScrape, isLoading }: ScraperFormProps) {
           className="sm:w-32"
         >
           {!isLoading && <Search className="h-4 w-4 mr-2" />}
-          Scrape
+          Extract
         </Button>
       </form>
       <p className="mt-4 text-xs text-gray-500">
-        Enter the full URL of the article you want to extract. Our system will remove ads, navigation, and other clutter.
+        Enter the full URL of a Guardian article. Our system will fetch clean, structured content directly from The Guardian Content API.
       </p>
     </div>
   );
