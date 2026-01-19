@@ -1,21 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
-import { 
-  Calendar, 
-  User, 
-  Globe, 
-  BarChart2, 
-  Copy, 
-  Check
-} from 'lucide-react';
+import React, { useEffect, useId, useState } from 'react';
 import { Button } from './ui/Button';
 
 interface ResultsViewProps {
   data: {
     title: string;
     author: string | null;
-    published_date: string | null;
+    published_date: string;
     content_html: string;
     content_text: string;
     source: string;
@@ -24,83 +16,82 @@ interface ResultsViewProps {
 }
 
 export function ResultsView({ data }: ResultsViewProps) {
-  const [copied, setCopied] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const toastId = useId();
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(data.content_text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(data.content_text);
+      setShowToast(true);
+      return;
+    } catch {
+      // Fall through to basic DOM fallback
+    }
+
+    try {
+      const textarea = document.createElement('textarea');
+      textarea.value = data.content_text;
+      textarea.setAttribute('readonly', 'true');
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      setShowToast(true);
+    } catch {
+      // Ignore
+    }
   };
 
-  return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-        {/* Header Metadata */}
-        <div className="border-b border-gray-100 bg-gray-50/50 p-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4 leading-tight break-words">
-            {data.title}
-          </h1>
-          
-          <div className="flex flex-wrap gap-y-3 gap-x-6 text-sm text-gray-600">
-            {data.author && (
-              <div className="flex items-center gap-1.5">
-                <User className="h-4 w-4 text-gray-400" />
-                <span className="font-medium">{data.author}</span>
-              </div>
-            )}
-            
-            {data.published_date && (
-              <div className="flex items-center gap-1.5">
-                <Calendar className="h-4 w-4 text-gray-400" />
-                <span>{data.published_date}</span>
-              </div>
-            )}
-            
-            <div className="flex items-center gap-1.5">
-              <Globe className="h-4 w-4 text-gray-400" />
-              <span>{data.source}</span>
-            </div>
-            
-            <div className="flex items-center gap-1.5">
-              <BarChart2 className="h-4 w-4 text-gray-400" />
-              <span>{data.word_count} words</span>
-            </div>
-          </div>
-        </div>
+  useEffect(() => {
+    if (!showToast) return;
+    const timer = window.setTimeout(() => setShowToast(false), 2000);
+    return () => window.clearTimeout(timer);
+  }, [showToast]);
 
-        {/* Actions */}
-        <div className="flex justify-between items-center px-6 py-3 bg-white border-b border-gray-100">
-          <div className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-            Article Content
-          </div>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="h-8 text-xs"
-            onClick={copyToClipboard}
-          >
-            {copied ? (
-              <Check className="h-3.5 w-3.5 mr-1.5 text-green-600" />
-            ) : (
-              <Copy className="h-3.5 w-3.5 mr-1.5" />
-            )}
-            {copied ? 'Copied' : 'Copy Text'}
+  const metadata = [
+    data.author ?? 'Unknown author',
+    data.published_date,
+    data.source,
+    `${data.word_count.toLocaleString()} words`,
+  ].filter(Boolean);
+
+  return (
+    <section aria-label="Result" className="rounded-lg border border-gray-200 bg-white">
+      <header className="border-b border-gray-200 px-5 py-5 sm:px-6">
+        <h2 className="text-lg font-semibold leading-snug text-gray-900 sm:text-xl">
+          {data.title}
+        </h2>
+        <p className="mt-2 text-sm text-gray-600">{metadata.join(' • ')}</p>
+      </header>
+
+      <div className="relative px-5 py-5 sm:px-6 sm:py-6">
+        <div className="flex justify-end">
+          <Button type="button" variant="outline" size="sm" onClick={copyToClipboard}>
+            Copy article text
           </Button>
         </div>
 
-        {/* Content */}
-        <div className="p-6 md:p-10">
-          <article 
-            className="prose prose-blue max-w-none 
-              prose-headings:text-gray-900 prose-headings:font-bold
-              prose-p:text-gray-700 prose-p:leading-relaxed
-              prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
-              prose-blockquote:border-l-4 prose-blockquote:border-blue-200 prose-blockquote:bg-blue-50/50 prose-blockquote:px-4 prose-blockquote:py-1 prose-blockquote:not-italic
-              prose-img:rounded-lg"
-            dangerouslySetInnerHTML={{ __html: data.content_html }}
-          />
+        <div className="sr-only" aria-live="polite" aria-atomic="true" id={toastId}>
+          {showToast ? 'Copied to clipboard' : ''}
+        </div>
+
+        {showToast ? (
+          <div className="pointer-events-none absolute right-5 top-14 rounded-md border border-gray-200 bg-white px-3 py-1 text-xs text-gray-700 sm:right-6">
+            Copied to clipboard
+          </div>
+        ) : null}
+
+        <div className="mt-5">
+          <div className="mx-auto max-w-2xl">
+            <article
+              className="prose prose-gray max-w-none prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-800 prose-p:leading-7"
+              dangerouslySetInnerHTML={{ __html: data.content_html }}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
