@@ -9,7 +9,7 @@ export function Navbar() {
           <div className="flex items-center gap-2">
             <Newspaper className="h-6 w-6 text-blue-600" />
             <span className="text-xl font-bold text-gray-900 tracking-tight">
-              ArticleScraper<span className="text-blue-600">Pro</span>
+              Guardian<span className="text-blue-600">Extractor</span>
             </span>
           </div>
           <div className="hidden sm:flex items-center gap-6">

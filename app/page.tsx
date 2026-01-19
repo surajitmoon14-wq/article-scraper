@@ -9,7 +9,7 @@ import { AlertCircle, Info } from 'lucide-react';
 interface ScrapeData {
   title: string;
   author: string | null;
-  published_date: string | null;
+  published_date: string;
   content_html: string;
   content_text: string;
   source: string;
@@ -38,7 +38,7 @@ export default function Home() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to scrape the article');
+        throw new Error(result.error || 'Failed to fetch the article');
       }
 
       setData(result);
@@ -56,10 +56,10 @@ export default function Home() {
       <main className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:py-12">
         <div className="mb-10 text-center">
           <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl mb-3">
-            Professional Article Scraper
+            Guardian Article Extractor
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Extract clean, readable content from any news or blog article instantly.
+            Extract clean, readable content from The Guardian articles instantly.
             Perfect for researchers, developers, and content creators.
           </p>
         </div>
@@ -84,8 +84,8 @@ export default function Home() {
               <div>
                 <h3 className="text-blue-900 font-semibold mb-1">Getting Started</h3>
                 <p className="text-blue-800 text-sm leading-relaxed">
-                  Paste an article URL above and click "Scrape". Our engine will analyze the page,
-                  identify the main content, and remove all distracting elements like ads and popups.
+                  Paste a Guardian article URL above and click "Extract". Our system will fetch
+                  clean, structured article data directly from The Guardian Content API.
                 </p>
               </div>
             </div>
@@ -108,7 +108,7 @@ export default function Home() {
 
       <footer className="mt-auto py-8 border-t border-gray-200 bg-white">
         <div className="max-w-7xl mx-auto px-4 text-center text-sm text-gray-500">
-          &copy; {new Date().getFullYear()} ArticleScraperPro. Built for professional content extraction.
+          &copy; {new Date().getFullYear()} Guardian Article Extractor. Built for professional content extraction.
         </div>
       </footer>
     </div>

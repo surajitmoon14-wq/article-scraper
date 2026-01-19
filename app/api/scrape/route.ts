@@ -1,4 +1,4 @@
-import { isValidUrl } from '@/lib/validators';
+import { isValidGuardianUrl, extractArticleId } from '@/lib/validators';
 import { scrapeArticle } from '@/lib/scraper';
 
 export const runtime = 'nodejs';
@@ -16,12 +16,17 @@ export async function POST(req: Request) {
       return Response.json({ error: 'URL is required' }, { status: 400 });
     }
 
-    if (!isValidUrl(url)) {
+    if (!isValidGuardianUrl(url)) {
       return Response.json(
-        {
-          error:
-            'Invalid or forbidden URL. Only public HTTP/HTTPS URLs are allowed.',
-        },
+        { error: 'Only Guardian articles are supported' },
+        { status: 400 }
+      );
+    }
+
+    const articleId = extractArticleId(url);
+    if (!articleId) {
+      return Response.json(
+        { error: 'Please enter a valid The Guardian article URL.' },
         { status: 400 }
       );
     }
@@ -29,12 +34,18 @@ export async function POST(req: Request) {
     const result = await scrapeArticle(url);
     return Response.json(result);
   } catch (error) {
-    console.error('Scraping error:', error);
+    console.error('API error:', error);
 
     const errorMessage =
-      error instanceof Error
-        ? error.message
-        : 'An unexpected error occurred while scraping the article.';
+      error instanceof Error ? error.message : 'An unexpected error occurred';
+
+    if (errorMessage.includes('Guardian API key is not configured')) {
+      return Response.json({ error: errorMessage }, { status: 500 });
+    }
+
+    if (errorMessage.includes('Guardian API error') || errorMessage.includes('Article not found')) {
+      return Response.json({ error: errorMessage }, { status: 502 });
+    }
 
     return Response.json({ error: errorMessage }, { status: 500 });
   }
