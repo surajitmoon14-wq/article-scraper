@@ -2,98 +2,93 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FileText, Quote, BookOpen, Pen, Globe, Zap } from 'lucide-react';
-
-const icons = [
-  { Icon: FileText, delay: 0, duration: 8 },
-  { Icon: Quote, delay: 0.5, duration: 7 },
-  { Icon: BookOpen, delay: 1, duration: 9 },
-  { Icon: Pen, delay: 1.5, duration: 6.5 },
-  { Icon: Globe, delay: 2, duration: 7.5 },
-  { Icon: Zap, delay: 2.5, duration: 8.5 },
-];
 
 export function AnimatedBackground() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-      {/* Gradient background layers */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0f0f14] via-[#121218] to-[#0f0f14]" />
-
-      {/* Ambient gradient orbs */}
+      {/* Deep base background */}
+      <div className="absolute inset-0 bg-[#0a0a0f]" />
+      
+      {/* Primary Glow Layer - Large, slow moving blobs */}
       <motion.div
-        className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[#6366f1]/10 blur-3xl"
+        className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] rounded-full bg-[#6366f1]/20 blur-[120px]"
         animate={{
+          x: [0, 50, 0],
+          y: [0, 30, 0],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+
+      <motion.div
+        className="absolute top-[20%] -right-[10%] w-[50%] h-[50%] rounded-full bg-[#8b5cf6]/15 blur-[100px]"
+        animate={{
+          x: [0, -40, 0],
+          y: [0, 60, 0],
+          scale: [1.1, 1, 1.1],
+        }}
+        transition={{
+          duration: 25,
+          repeat: Infinity,
+          ease: 'easeInOut',
+          delay: 2,
+        }}
+      />
+
+      <motion.div
+        className="absolute -bottom-[10%] left-[20%] w-[55%] h-[55%] rounded-full bg-[#3b82f6]/10 blur-[110px]"
+        animate={{
+          x: [0, 30, 0],
+          y: [0, -50, 0],
           scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
         }}
         transition={{
-          duration: 10,
+          duration: 22,
           repeat: Infinity,
           ease: 'easeInOut',
+          delay: 5,
+        }}
+      />
+
+      {/* Secondary Glows - Smaller, faster drifting light balls */}
+      <motion.div
+        className="absolute top-[40%] left-[40%] w-64 h-64 rounded-full bg-cyan-500/10 blur-[80px]"
+        animate={{
+          x: [-100, 100, -100],
+          y: [-50, 50, -50],
+          opacity: [0.2, 0.4, 0.2],
+        }}
+        transition={{
+          duration: 15,
+          repeat: Infinity,
+          ease: 'linear',
         }}
       />
 
       <motion.div
-        className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-[#8b5cf6]/10 blur-3xl"
+        className="absolute bottom-[30%] right-[30%] w-72 h-72 rounded-full bg-amber-500/5 blur-[90px]"
         animate={{
-          scale: [1.2, 1, 1.2],
-          opacity: [0.4, 0.6, 0.4],
+          x: [150, -150, 150],
+          y: [100, -100, 100],
+          opacity: [0.1, 0.3, 0.1],
         }}
         transition={{
-          duration: 12,
+          duration: 18,
           repeat: Infinity,
-          ease: 'easeInOut',
-          delay: 1,
+          ease: 'linear',
+          delay: 3,
         }}
       />
 
-      {/* Floating icons */}
-      {icons.map(({ Icon, delay, duration }, index) => {
-        const positions = [
-          { top: '10%', left: '5%' },
-          { top: '20%', right: '10%' },
-          { top: '60%', left: '8%' },
-          { top: '40%', right: '5%' },
-          { top: '75%', right: '15%' },
-          { top: '30%', left: '15%' },
-        ];
+      {/* Radial Wash */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_0%,rgba(10,10,15,0.8)_100%)]" />
 
-        const pos = positions[index % positions.length];
-
-        return (
-          <motion.div
-            key={index}
-            className={`absolute ${pos.top} ${pos.left} ${pos.right || ''}`}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{
-              opacity: [0.15, 0.25, 0.15],
-              scale: 1,
-              y: [0, -20, 0],
-              rotate: [0, 5, 0],
-            }}
-            transition={{
-              duration,
-              delay,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          >
-            <Icon className="w-12 h-12 sm:w-16 sm:h-16 text-[#6366f1]" strokeWidth={1.5} />
-          </motion.div>
-        );
-      })}
-
-      {/* Subtle grid pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.02]"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, currentColor 1px, transparent 1px),
-            linear-gradient(to bottom, currentColor 1px, transparent 1px)
-          `,
-          backgroundSize: '50px 50px',
-        }}
-      />
+      {/* Soft Vignette */}
+      <div className="absolute inset-0 shadow-[inset_0_0_150px_rgba(0,0,0,0.5)]" />
     </div>
   );
 }

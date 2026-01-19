@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { BookOpen, Shield, Zap, Globe } from 'lucide-react';
+import { BookOpen, Shield, Zap, Globe, Sparkles } from 'lucide-react';
 
 const features = [
   {
@@ -10,24 +10,28 @@ const features = [
     title: 'Clean Extraction',
     description:
       'Instantly extract article content without ads, sidebars, or distractions. Get pure, readable text.',
+    color: 'from-blue-500 to-indigo-500'
   },
   {
     icon: Shield,
     title: 'Reliable Source',
     description:
       'Powered by the official Guardian Content API. Accurate, authorized, and consistently updated.',
+    color: 'from-emerald-500 to-teal-500'
   },
   {
     icon: Zap,
     title: 'Lightning Fast',
     description:
       'Get your extracted content in seconds. No waiting, no processing delays.',
+    color: 'from-amber-500 to-orange-500'
   },
   {
     icon: Globe,
     title: 'Always Available',
     description:
       'Access Guardian articles from anywhere. Built for reliability and performance.',
+    color: 'from-purple-500 to-violet-500'
   },
 ];
 
@@ -36,49 +40,57 @@ export function AboutSection() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section id="about" className="py-20 sm:py-32">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="about" className="relative py-32 overflow-hidden">
+      {/* Background organic wash */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[#6366f1]/5 blur-[120px] rounded-full pointer-events-none" />
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16 sm:mb-20"
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center mb-24"
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#f5f5f7] mb-6">
-            About Extract
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1a1a24] border border-[#2a2a3a] mb-6">
+            <Sparkles className="w-4 h-4 text-[#6366f1]" />
+            <span className="text-xs font-bold uppercase tracking-widest text-gray-400">The Experience</span>
+          </div>
+          <h2 className="text-4xl sm:text-6xl font-black text-white mb-8 tracking-tight">
+            Designed for <br/><span className="italic text-[#6366f1]">Clarity.</span>
           </h2>
-          <p className="text-lg sm:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Extract provides a clean, distraction-free way to access Guardian article content.
-            Perfect for researchers, writers, and readers who want pure text without clutter.
+          <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed font-medium">
+            We believe that great journalism deserves a great reading environment. 
+            Extract is more than a tool—it's a sanctuary for your mind.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
           {features.map((feature, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="group relative rounded-2xl bg-[#1a1a24] border border-[#2a2a3a] p-6 sm:p-8 hover:border-[#6366f1]/50 transition-all duration-300"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              className="group relative"
             >
-              <div className="relative z-10">
-                <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-[#6366f1]/10 mb-4 sm:mb-6 group-hover:bg-[#6366f1]/20 transition-colors duration-300">
-                  <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-[#6366f1]" strokeWidth={2} />
+              <div className="relative z-10 h-full p-8 sm:p-10 rounded-[40px] bg-[#1a1a24] border border-[#2a2a3a] hover:border-[#6366f1]/30 transition-all duration-500 overflow-hidden">
+                {/* Internal Glow */}
+                <div className={`absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-10 blur-3xl transition-opacity duration-500`} />
+                
+                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-br ${feature.color} p-4 mb-8 shadow-lg group-hover:scale-110 transition-transform duration-500`}>
+                  <feature.icon className="w-full h-full text-white" />
                 </div>
-                <h3 className="text-xl sm:text-2xl font-semibold text-[#f5f5f7] mb-3">
+                
+                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4 tracking-tight">
                   {feature.title}
                 </h3>
-                <p className="text-base sm:text-lg text-gray-400 leading-relaxed">
+                <p className="text-gray-400 leading-relaxed text-lg font-medium">
                   {feature.description}
                 </p>
               </div>
-
-              {/* Subtle glow on hover */}
-              <motion.div
-                className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#6366f1]/0 via-transparent to-[#8b5cf6]/0 group-hover:from-[#6366f1]/5 group-hover:to-[#8b5cf6]/5 transition-all duration-500"
-              />
             </motion.div>
           ))}
         </div>

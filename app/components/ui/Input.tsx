@@ -19,25 +19,24 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         {label && (
-          <label className="block text-sm font-medium text-[#f5f5f7] mb-2">
+          <label className="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-3 ml-2">
             {label}
           </label>
         )}
-        <div className="relative">
+        <div className="relative group">
           <motion.div
             initial={false}
             animate={{
-              boxShadow: isFocused
-                ? '0 0 0 2px rgba(99, 102, 241, 0.5), 0 0 20px rgba(99, 102, 241, 0.3)'
-                : 'none',
+              opacity: isFocused ? 1 : 0,
+              scale: isFocused ? 1 : 0.98,
             }}
-            transition={{ duration: 0.2 }}
-            className="absolute inset-0 rounded-xl pointer-events-none"
+            transition={{ duration: 0.3 }}
+            className="absolute -inset-[1px] bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#6366f1] rounded-[22px] blur-[2px] pointer-events-none"
           />
           <input
             className={cn(
-              "relative w-full h-11 sm:h-12 rounded-xl bg-[#1a1a24] border border-[#2a2a3a] px-4 text-sm sm:text-base placeholder:text-gray-500 focus:outline-none focus:border-[#6366f1] transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 text-[#f5f5f7]",
-              error && "border-red-500 focus:border-red-500",
+              "relative w-full h-14 sm:h-16 rounded-[21px] bg-[#0a0a0f] border border-[#2a2a3a] px-6 text-base sm:text-lg placeholder:text-gray-600 focus:outline-none focus:border-transparent transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 text-white font-medium",
+              error && "border-red-500/50",
               className
             )}
             ref={ref}
@@ -46,7 +45,15 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
         </div>
-        {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
+        {error && (
+          <motion.p 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-3 ml-2 text-xs font-bold text-red-400 uppercase tracking-widest"
+          >
+            {error}
+          </motion.p>
+        )}
       </div>
     );
   }

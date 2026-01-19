@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from './ui/Input';
 import { Button } from './ui/Button';
+import { Globe, AlertCircle } from 'lucide-react';
 
 interface ScraperFormProps {
   onScrape: (url: string) => void;
@@ -47,59 +48,72 @@ export function ScraperForm({ onScrape, isLoading, externalError }: ScraperFormP
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.2 }}
-      className="relative rounded-2xl bg-[#1a1a24] border border-[#2a2a3a] p-6 sm:p-8"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className="relative p-[1px] rounded-[32px] overflow-hidden"
     >
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-6">
-        <Input
-          placeholder="https://www.theguardian.com/..."
-          value={url}
-          onChange={(e) => {
-            setUrl(e.target.value);
-            if (error) setError('');
-          }}
-          error={error}
-          disabled={isLoading}
-          inputMode="url"
-          autoComplete="off"
-        />
+      {/* Animated Border Gradient */}
+      <motion.div 
+        animate={{ 
+          rotate: [0, 360],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        className="absolute inset-[-50%] bg-[conic-gradient(from_0deg,#6366f1,transparent,transparent,#8b5cf6,transparent,transparent,#6366f1)]"
+      />
 
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6">
-          <Button
-            type="submit"
-            className="w-full sm:w-auto sm:min-w-[160px]"
-            disabled={disabled}
-            size="lg"
-          >
-            {isLoading ? 'Extracting…' : 'Extract Article'}
-          </Button>
+      <div className="relative bg-[#1a1a24] rounded-[31px] p-6 sm:p-10 shadow-2xl">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <div className="relative group">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#6366f1] transition-colors">
+              <Globe className="w-5 h-5" />
+            </div>
+            <Input
+              placeholder="https://www.theguardian.com/..."
+              value={url}
+              onChange={(e) => {
+                setUrl(e.target.value);
+                if (error) setError('');
+              }}
+              error={error}
+              disabled={isLoading}
+              inputMode="url"
+              autoComplete="off"
+              className="pl-12 transition-all"
+            />
+          </div>
 
-          {externalError ? (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-sm text-red-400 flex items-center gap-2"
+          <div className="flex flex-col sm:flex-row items-center gap-6">
+            <Button
+              type="submit"
+              className="w-full sm:w-auto h-14 sm:h-16 px-10 text-lg font-bold tracking-tight"
+              disabled={disabled}
+              isLoading={isLoading}
+              loadingText="Deconstructing..."
             >
-              <svg
-                className="w-4 h-4 flex-shrink-0"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              {externalError}
-            </motion.p>
-          ) : null}
-        </div>
-      </form>
+              Start Extraction
+            </Button>
+
+            <AnimatePresence>
+              {externalError && (
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  className="flex items-center gap-2 text-red-400 font-medium text-sm bg-red-400/10 px-4 py-2 rounded-full border border-red-400/20"
+                >
+                  <AlertCircle className="w-4 h-4" />
+                  {externalError}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </form>
+      </div>
     </motion.div>
   );
 }
