@@ -23,8 +23,10 @@ export async function scrapeArticle(url: string): Promise<ScrapeResult> {
     const response = await fetch(url, {
       signal: controller.signal,
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        Accept:
+          'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
         'Accept-Language': 'en-US,en;q=0.9',
       },
     });
@@ -32,7 +34,9 @@ export async function scrapeArticle(url: string): Promise<ScrapeResult> {
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch article: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch article: ${response.status} ${response.statusText}`
+      );
     }
 
     const contentType = response.headers.get('content-type');
@@ -46,13 +50,15 @@ export async function scrapeArticle(url: string): Promise<ScrapeResult> {
     const article = reader.parse();
 
     if (article) {
-      const wordCount = countWords(article.textContent);
+      const textContent = article.textContent ?? '';
+      const wordCount = countWords(textContent);
+
       return {
         title: article.title,
         author: article.byline || null,
-        published_date: extractDate(html) || null,
+        published_date: extractDate(html),
         content_html: cleanHtml(article.content),
-        content_text: article.textContent.trim(),
+        content_text: textContent.trim(),
         source: new URL(url).hostname,
         word_count: wordCount,
       };
@@ -62,55 +68,62 @@ export async function scrapeArticle(url: string): Promise<ScrapeResult> {
     return scrapeWithCheerio(html, url);
   } catch (error) {
     clearTimeout(timeoutId);
+
     if (error instanceof Error && error.name === 'AbortError') {
       throw new Error('Request timed out after 15 seconds');
     }
+
     throw error;
   }
 }
 
 function countWords(text: string): number {
-  return text.trim().split(/\s+/).length;
+  if (!text) return 0;
+  return text.trim().split(/\s+/).filter(Boolean).length;
 }
 
 function extractDate(html: string): string | null {
   const $ = cheerio.load(html);
-  // Common meta tags for dates
+
   const dateSelectors = [
     'meta[property="article:published_time"]',
     'meta[name="publish-date"]',
     'meta[name="pubdate"]',
     'meta[property="og:published_time"]',
-    'time[datetime]'
+    'time[datetime]',
   ];
 
   for (const selector of dateSelectors) {
     const element = $(selector);
     const dateStr = element.attr('content') || element.attr('datetime');
+
     if (dateStr) {
-      try {
-        return new Date(dateStr).toISOString().split('T')[0];
-      } catch {
-        continue;
+      const parsed = new Date(dateStr);
+      if (!isNaN(parsed.getTime())) {
+        return parsed.toISOString().split('T')[0];
       }
     }
   }
+
   return null;
 }
 
 function cleanHtml(html: string): string {
   const $ = cheerio.load(html);
-  
+
   // Remove unwanted elements
-  $('script, style, iframe, ads, nav, footer, header, aside, form, button, input').remove();
-  
-  // Clean up attributes but keep necessary ones
+  $(
+    'script, style, iframe, ads, nav, footer, header, aside, form, button, input'
+  ).remove();
+
+  // Remove unnecessary attributes
   $('*').each((_, el) => {
-    const element = $(el);
     const attribs = el.attribs;
+    if (!attribs) return;
+
     Object.keys(attribs).forEach((attr) => {
       if (!['src', 'href', 'alt', 'title'].includes(attr)) {
-        element.removeAttr(attr);
+        $(el).removeAttr(attr);
       }
     });
   });
@@ -120,14 +133,15 @@ function cleanHtml(html: string): string {
 
 function scrapeWithCheerio(html: string, url: string): ScrapeResult {
   const $ = cheerio.load(html);
-  
-  // Remove junk
+
   $('script, style, iframe, ads, nav, footer, header, aside, form, button, input, .ads, #ads, .sidebar').remove();
 
-  const title = $('title').text() || $('h1').first().text() || 'Untitled';
-  
-  // Heuristic for content: find the element with the most paragraphs
-  let bestElement: any = null;
+  const title =
+    $('title').text().trim() ||
+    $('h1').first().text().trim() ||
+    'Untitled';
+
+  let bestElement: cheerio.Element | null = null;
   let maxParagraphs = 0;
 
   $('div, article, section').each((_, el) => {
@@ -139,9 +153,10 @@ function scrapeWithCheerio(html: string, url: string): ScrapeResult {
   });
 
   const contentElement = bestElement ? $(bestElement) : $('body');
-  const contentHtml = cleanHtml(contentElement.html() || '');
+  const rawHtml = contentElement.html() || '';
+  const contentHtml = cleanHtml(rawHtml);
   const contentText = contentElement.text().trim();
-  
+
   return {
     title,
     author: $('meta[name="author"]').attr('content') || null,
