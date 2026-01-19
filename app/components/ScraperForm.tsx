@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Input } from './ui/Input';
 import { Button } from './ui/Button';
 
@@ -45,30 +46,60 @@ export function ScraperForm({ onScrape, isLoading, externalError }: ScraperFormP
   const disabled = isLoading || url.trim().length === 0;
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-5 sm:p-6">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row">
-        <div className="flex-1">
-          <Input
-            placeholder="https://www.theguardian.com/..."
-            value={url}
-            onChange={(e) => {
-              setUrl(e.target.value);
-              if (error) setError('');
-            }}
-            error={error}
-            disabled={isLoading}
-            inputMode="url"
-            autoComplete="off"
-          />
-        </div>
-        <Button type="submit" className="sm:w-32" disabled={disabled}>
-          {isLoading ? 'Extracting…' : 'Extract'}
-        </Button>
-      </form>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.2 }}
+      className="relative rounded-2xl bg-[#1a1a24] border border-[#2a2a3a] p-6 sm:p-8"
+    >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-6">
+        <Input
+          placeholder="https://www.theguardian.com/..."
+          value={url}
+          onChange={(e) => {
+            setUrl(e.target.value);
+            if (error) setError('');
+          }}
+          error={error}
+          disabled={isLoading}
+          inputMode="url"
+          autoComplete="off"
+        />
 
-      {externalError ? (
-        <p className="mt-3 text-sm text-red-600">{externalError}</p>
-      ) : null}
-    </div>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6">
+          <Button
+            type="submit"
+            className="w-full sm:w-auto sm:min-w-[160px]"
+            disabled={disabled}
+            size="lg"
+          >
+            {isLoading ? 'Extracting…' : 'Extract Article'}
+          </Button>
+
+          {externalError ? (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-sm text-red-400 flex items-center gap-2"
+            >
+              <svg
+                className="w-4 h-4 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              {externalError}
+            </motion.p>
+          ) : null}
+        </div>
+      </form>
+    </motion.div>
   );
 }

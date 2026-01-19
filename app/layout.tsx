@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -13,8 +13,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'GuardianExtractor',
-  description: 'Extract clean, readable content from The Guardian articles instantly.',
+  title: 'Extract - Clean Guardian Article Content',
+  description: 'Extract clean, readable content from The Guardian articles instantly. No ads, no distractions.',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
