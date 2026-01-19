@@ -157,13 +157,18 @@ function scrapeWithCheerio(html: string, url: string): ScrapeResult {
   const contentHtml = cleanHtml(rawHtml);
   const contentText = contentElement.text().trim();
 
+  const title =
+  article.title?.trim() ||
+  dom.window.document.title?.trim() ||
+  'Untitled';
+
   return {
     title,
-    author: $('meta[name="author"]').attr('content') || null,
+    author: article.byline || null,
     published_date: extractDate(html),
-    content_html: contentHtml,
-    content_text: contentText,
+    content_html: cleanHtml(article.content),
+    content_text: textContent.trim(),
     source: new URL(url).hostname,
-    word_count: countWords(contentText),
+    word_count: wordCount,
   };
 }
