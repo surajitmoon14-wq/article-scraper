@@ -4,6 +4,13 @@ import { scrapeArticle } from '@/lib/scraper';
 
 export const runtime = 'nodejs';
 
+export async function GET(req: NextRequest) {
+  return NextResponse.json(
+    { error: 'Method not allowed. Use POST.' },
+    { status: 405 }
+  );
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
