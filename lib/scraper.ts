@@ -115,14 +115,14 @@ function cleanHtml(html: string): string {
   $('script, style, iframe, nav, footer, header, aside, form, button, input').remove();
 
   $('*').each((_, el) => {
-    if (el.type !== 'tag') return;
+    const $el = $(el);
+    const attrs = $el.attr();
 
-    const attribs = el.attribs;
-    if (!attribs) return;
-
-    for (const attr of Object.keys(attribs)) {
-      if (!['src', 'href', 'alt', 'title'].includes(attr)) {
-        $(el).removeAttr(attr);
+    if (attrs) {
+      for (const attr of Object.keys(attrs)) {
+        if (!['src', 'href', 'alt', 'title'].includes(attr)) {
+          $el.removeAttr(attr);
+        }
       }
     }
   });
@@ -140,18 +140,19 @@ function scrapeWithCheerio(html: string, url: string): ScrapeResult {
     $('h1').first().text().trim() ||
     'Untitled';
 
-  let bestElement: cheerio.Element | null = null;
+  let bestElement: ReturnType<typeof $> | null = null;
   let maxParagraphs = 0;
 
   $('div, article, section').each((_, el) => {
-    const pCount = $(el).find('p').length;
+    const $el = $(el);
+    const pCount = $el.find('p').length;
     if (pCount > maxParagraphs) {
       maxParagraphs = pCount;
-      bestElement = el;
+      bestElement = $el;
     }
   });
 
-  const contentElement = bestElement ? $(bestElement) : $('body');
+  const contentElement = bestElement ?? $('body');
   const contentHtml = cleanHtml(contentElement.html() || '');
   const contentText = contentElement.text().trim();
 
