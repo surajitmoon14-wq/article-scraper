@@ -12,9 +12,6 @@ export interface ScrapeResult {
   word_count: number;
 }
 
-/**
- * Scrapes an article from a URL using Readability with a Cheerio fallback.
- */
 export async function scrapeArticle(url: string): Promise<ScrapeResult> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 15000);
@@ -69,7 +66,6 @@ export async function scrapeArticle(url: string): Promise<ScrapeResult> {
       };
     }
 
-    // Fallback if Readability fails
     return scrapeWithCheerio(html, url);
   } catch (error) {
     clearTimeout(timeoutId);
@@ -119,6 +115,8 @@ function cleanHtml(html: string): string {
   $('script, style, iframe, nav, footer, header, aside, form, button, input').remove();
 
   $('*').each((_, el) => {
+    if (el.type !== 'tag') return;
+
     const attribs = el.attribs;
     if (!attribs) return;
 
