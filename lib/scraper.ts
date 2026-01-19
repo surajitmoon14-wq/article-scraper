@@ -17,7 +17,7 @@ export interface ScrapeResult {
  */
 export async function scrapeArticle(url: string): Promise<ScrapeResult> {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
 
   try {
     const response = await fetch(url, {
@@ -51,20 +51,23 @@ export async function scrapeArticle(url: string): Promise<ScrapeResult> {
 
     if (article) {
       const textContent = article.textContent ?? '';
-      const wordCount = countWords(textContent);
+      const resolvedTitle =
+        article.title?.trim() ||
+        dom.window.document.title?.trim() ||
+        'Untitled';
 
       return {
-        title: article.title,
+        title: resolvedTitle,
         author: article.byline || null,
         published_date: extractDate(html),
         content_html: cleanHtml(article.content),
         content_text: textContent.trim(),
         source: new URL(url).hostname,
-        word_count: wordCount,
+        word_count: countWords(textContent),
       };
     }
 
-    // Fallback to Cheerio if Readability fails
+    // Fallback if Readability fails
     return scrapeWithCheerio(html, url);
   } catch (error) {
     clearTimeout(timeoutId);
@@ -94,8 +97,8 @@ function extractDate(html: string): string | null {
   ];
 
   for (const selector of dateSelectors) {
-    const element = $(selector);
-    const dateStr = element.attr('content') || element.attr('datetime');
+    const el = $(selector);
+    const dateStr = el.attr('content') || el.attr('datetime');
 
     if (dateStr) {
       const parsed = new Date(dateStr);
@@ -111,21 +114,17 @@ function extractDate(html: string): string | null {
 function cleanHtml(html: string): string {
   const $ = cheerio.load(html);
 
-  // Remove unwanted elements
-  $(
-    'script, style, iframe, ads, nav, footer, header, aside, form, button, input'
-  ).remove();
+  $('script, style, iframe, nav, footer, header, aside, form, button, input').remove();
 
-  // Remove unnecessary attributes
   $('*').each((_, el) => {
     const attribs = el.attribs;
     if (!attribs) return;
 
-    Object.keys(attribs).forEach((attr) => {
+    for (const attr of Object.keys(attribs)) {
       if (!['src', 'href', 'alt', 'title'].includes(attr)) {
         $(el).removeAttr(attr);
       }
-    });
+    }
   });
 
   return $('body').html() || '';
@@ -134,9 +133,9 @@ function cleanHtml(html: string): string {
 function scrapeWithCheerio(html: string, url: string): ScrapeResult {
   const $ = cheerio.load(html);
 
-  $('script, style, iframe, ads, nav, footer, header, aside, form, button, input, .ads, #ads, .sidebar').remove();
+  $('script, style, iframe, nav, footer, header, aside, form, button, input, .ads, #ads, .sidebar').remove();
 
-  const title =
+  const resolvedTitle =
     $('title').text().trim() ||
     $('h1').first().text().trim() ||
     'Untitled';
@@ -153,22 +152,16 @@ function scrapeWithCheerio(html: string, url: string): ScrapeResult {
   });
 
   const contentElement = bestElement ? $(bestElement) : $('body');
-  const rawHtml = contentElement.html() || '';
-  const contentHtml = cleanHtml(rawHtml);
+  const contentHtml = cleanHtml(contentElement.html() || '');
   const contentText = contentElement.text().trim();
 
-  const title =
-  article.title?.trim() ||
-  dom.window.document.title?.trim() ||
-  'Untitled';
-
   return {
-    title,
-    author: article.byline || null,
+    title: resolvedTitle,
+    author: $('meta[name="author"]').attr('content') || null,
     published_date: extractDate(html),
-    content_html: cleanHtml(article.content),
-    content_text: textContent.trim(),
+    content_html: contentHtml,
+    content_text: contentText,
     source: new URL(url).hostname,
-    word_count: wordCount,
+    word_count: countWords(contentText),
   };
 }
