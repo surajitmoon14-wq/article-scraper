@@ -56,11 +56,13 @@ export async function scrapeArticle(url: string): Promise<ScrapeResult> {
         dom.window.document.title?.trim() ||
         'Untitled';
 
+      const contentHtml = cleanHtml(article.content ?? '');
+
       return {
         title: resolvedTitle,
         author: article.byline || null,
         published_date: extractDate(html),
-        content_html: cleanHtml(article.content),
+        content_html: contentHtml,
         content_text: textContent.trim(),
         source: new URL(url).hostname,
         word_count: countWords(textContent),
