@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { ScraperForm } from './components/ScraperForm';
 import { ResultsView } from './components/ResultsView';
-import { AlertCircle, Info } from 'lucide-react';
 
 interface ScrapeData {
   title: string;
@@ -50,65 +49,33 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="flex min-h-screen flex-col bg-white">
       <Navbar />
-      
-      <main className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:py-12">
-        <div className="mb-10 text-center">
-          <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl mb-3">
+
+      <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-10 sm:px-6">
+        <section className="text-center">
+          <h1 className="text-3xl font-semibold text-gray-900 sm:text-4xl">
             Guardian Article Extractor
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="mx-auto mt-3 max-w-2xl text-base text-gray-600 sm:text-lg">
             Extract clean, readable content from The Guardian articles instantly.
-            Perfect for researchers, developers, and content creators.
           </p>
-        </div>
+        </section>
 
-        <div className="space-y-8">
-          <ScraperForm onScrape={handleScrape} isLoading={isLoading} />
+        <section className="mt-8 sm:mt-10">
+          <ScraperForm onScrape={handleScrape} isLoading={isLoading} externalError={error} />
+        </section>
 
-          {error && (
-            <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
-              <div className="flex items-center">
-                <AlertCircle className="h-5 w-5 text-red-400 mr-3" />
-                <p className="text-sm text-red-700">{error}</p>
-              </div>
-            </div>
-          )}
-
-          {!isLoading && !data && !error && (
-            <div className="bg-blue-50 border border-blue-100 p-6 rounded-lg flex gap-4">
-              <div className="bg-blue-100 p-2 rounded-full h-fit">
-                <Info className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <h3 className="text-blue-900 font-semibold mb-1">Getting Started</h3>
-                <p className="text-blue-800 text-sm leading-relaxed">
-                  Paste a Guardian article URL above and click "Extract". Our system will fetch
-                  clean, structured article data directly from The Guardian Content API.
-                </p>
-              </div>
-            </div>
-          )}
-
-          {isLoading && (
-            <div className="space-y-4">
-              <div className="h-8 bg-gray-200 rounded w-3/4 animate-pulse" />
-              <div className="space-y-2">
-                <div className="h-4 bg-gray-200 rounded animate-pulse" />
-                <div className="h-4 bg-gray-200 rounded animate-pulse" />
-                <div className="h-4 bg-gray-200 rounded w-5/6 animate-pulse" />
-              </div>
-            </div>
-          )}
-
-          {data && <ResultsView data={data} />}
-        </div>
+        {data ? (
+          <section className="mt-8 sm:mt-10">
+            <ResultsView data={data} />
+          </section>
+        ) : null}
       </main>
 
-      <footer className="mt-auto py-8 border-t border-gray-200 bg-white">
-        <div className="max-w-7xl mx-auto px-4 text-center text-sm text-gray-500">
-          &copy; {new Date().getFullYear()} Guardian Article Extractor. Built for professional content extraction.
+      <footer className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-4xl px-4 py-6 text-center sm:px-6">
+          <p className="text-xs text-gray-500">Content provided via The Guardian Content API.</p>
         </div>
       </footer>
     </div>

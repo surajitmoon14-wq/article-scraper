@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Article Scraper | Production Article Extraction Platform",
-  description: "Extract clean, structured content from any article URL using our production-grade scraper.",
+  title: 'GuardianExtractor',
+  description: 'Extract clean, readable content from The Guardian articles instantly.',
 };
 
 export default function RootLayout({

@@ -3,61 +3,72 @@
 import React, { useState } from 'react';
 import { Input } from './ui/Input';
 import { Button } from './ui/Button';
-import { Search } from 'lucide-react';
 
 interface ScraperFormProps {
   onScrape: (url: string) => void;
   isLoading: boolean;
+  externalError?: string | null;
 }
 
-export function ScraperForm({ onScrape, isLoading }: ScraperFormProps) {
+function isValidGuardianArticleUrl(value: string): boolean {
+  try {
+    const parsed = new URL(value);
+    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return false;
+    if (parsed.hostname !== 'www.theguardian.com') return false;
+    if (!parsed.pathname || parsed.pathname === '/') return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function ScraperForm({ onScrape, isLoading, externalError }: ScraperFormProps) {
   const [url, setUrl] = useState('');
   const [error, setError] = useState('');
 
+  const validationMessage = 'Please enter a valid The Guardian article URL.';
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    const trimmed = url.trim();
+
+    if (!trimmed || !isValidGuardianArticleUrl(trimmed)) {
+      setError(validationMessage);
+      return;
+    }
+
     setError('');
-
-    if (!url) {
-      setError('Please enter a URL');
-      return;
-    }
-
-    try {
-      new URL(url);
-    } catch {
-      setError('Please enter a valid URL (including http/https)');
-      return;
-    }
-
-    onScrape(url);
+    onScrape(trimmed);
   };
 
+  const disabled = isLoading || url.trim().length === 0;
+
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Extract New Article</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
-        <div className="flex-grow">
+    <div className="rounded-lg border border-gray-200 bg-white p-5 sm:p-6">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row">
+        <div className="flex-1">
           <Input
-            placeholder="https://www.theguardian.com/article-url"
+            placeholder="https://www.theguardian.com/..."
             value={url}
-            onChange={(e) => setUrl(e.target.value)}
+            onChange={(e) => {
+              setUrl(e.target.value);
+              if (error) setError('');
+            }}
             error={error}
             disabled={isLoading}
+            inputMode="url"
+            autoComplete="off"
           />
         </div>
-        <Button 
-          type="submit" 
-          isLoading={isLoading} 
-          className="sm:w-32"
-        >
-          {!isLoading && <Search className="h-4 w-4 mr-2" />}
-          Extract
+        <Button type="submit" className="sm:w-32" disabled={disabled}>
+          {isLoading ? 'Extracting…' : 'Extract'}
         </Button>
       </form>
-      <p className="mt-4 text-xs text-gray-500">
-        Enter the full URL of a Guardian article. Our system will fetch clean, structured content directly from The Guardian Content API.
-      </p>
+
+      {externalError ? (
+        <p className="mt-3 text-sm text-red-600">{externalError}</p>
+      ) : null}
     </div>
   );
 }
