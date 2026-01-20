@@ -196,7 +196,7 @@ export default function Home() {
               
               <button
                 onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
-                className="text-gray-400 hover:text-white font-semibold transition-colors flex items-center gap-2"
+                className="group text-gray-400 hover:text-white font-semibold transition-colors flex items-center gap-2"
               >
                 Learn more
                 <div className="w-6 h-[1px] bg-gray-600 group-hover:w-10 transition-all" />

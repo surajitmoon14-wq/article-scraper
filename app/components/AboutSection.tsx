@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { BookOpen, Shield, Zap, Globe, Sparkles } from 'lucide-react';
 
 const features = [
@@ -36,9 +36,6 @@ const features = [
 ];
 
 export function AboutSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
-
   return (
     <section id="about" className="relative py-32 overflow-hidden">
       {/* Background organic wash */}
@@ -46,7 +43,6 @@ export function AboutSection() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
-          ref={ref}
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -62,7 +58,7 @@ export function AboutSection() {
           </h2>
           <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed font-medium">
             We believe that great journalism deserves a great reading environment. 
-            Extract is more than a tool—it's a sanctuary for your mind.
+            Extract is more than a tool—it&apos;s a sanctuary for your mind.
           </p>
         </motion.div>
 

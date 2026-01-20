@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const result = await scrapeArticle(url);
+    const result = await scrapeArticle(articleId);
     return Response.json(result);
   } catch (error) {
     console.error('API error:', error);

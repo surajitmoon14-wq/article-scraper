@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useId, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from './ui/Button';
 import { Check, Calendar, User, Hash, Copy, Share2, BookOpen } from 'lucide-react';
@@ -19,7 +19,6 @@ interface ResultsViewProps {
 
 export function ResultsView({ data }: ResultsViewProps) {
   const [showToast, setShowToast] = useState(false);
-  const toastId = useId();
 
   const copyToClipboard = async () => {
     try {
