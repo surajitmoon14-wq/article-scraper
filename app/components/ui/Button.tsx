@@ -26,15 +26,15 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    'relative inline-flex items-center justify-center rounded-full font-bold tracking-tight overflow-hidden transition-all duration-500 disabled:pointer-events-none disabled:opacity-50 active:scale-95';
+    'relative inline-flex items-center justify-center rounded-full font-bold tracking-tight overflow-hidden transition-all duration-300 disabled:pointer-events-none disabled:opacity-50 active:scale-95';
 
   const variants = {
     primary:
-      'bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] text-white shadow-[0_10px_30px_rgba(99,102,241,0.3)] hover:shadow-[0_15px_40px_rgba(99,102,241,0.5)]',
+      'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl',
     secondary:
-      'bg-[#1a1a24] text-white hover:bg-[#252532] border border-[#2a2a3a]',
+      'bg-gray-200 hover:bg-gray-300 text-gray-900 border border-gray-300',
     outline:
-      'border border-[#2a2a3a] bg-transparent text-[#f5f5f7] hover:bg-[#1a1a24] hover:border-[#6366f1]',
+      'border-2 border-gray-300 bg-transparent text-gray-700 hover:bg-gray-50 hover:border-gray-400',
   };
 
   const sizes = {
@@ -64,9 +64,6 @@ export function Button({
           </>
         ) : children}
       </div>
-      
-      {/* Gloss Effect on Hover */}
-      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
     </motion.button>
   );
 }
