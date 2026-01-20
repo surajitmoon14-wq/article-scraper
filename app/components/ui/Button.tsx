@@ -7,7 +7,8 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-interface ButtonProps extends HTMLMotionProps<'button'> {
+interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
+  children?: React.ReactNode;
   isLoading?: boolean;
   loadingText?: string;
   variant?: 'primary' | 'secondary' | 'outline';
@@ -56,7 +57,7 @@ export function Button({
           <>
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
               className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
             />
             {loadingText ?? 'Loading…'}
