@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { motion } from 'framer-motion';
@@ -14,42 +14,27 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, label, error, ...props }, ref) => {
-    const [isFocused, setIsFocused] = useState(false);
-
     return (
       <div className="w-full">
         {label && (
-          <label className="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-3 ml-2">
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
             {label}
           </label>
         )}
-        <div className="relative group">
-          <motion.div
-            initial={false}
-            animate={{
-              opacity: isFocused ? 1 : 0,
-              scale: isFocused ? 1 : 0.98,
-            }}
-            transition={{ duration: 0.3 }}
-            className="absolute -inset-[1px] bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#6366f1] rounded-[22px] blur-[2px] pointer-events-none"
-          />
-          <input
-            className={cn(
-              "relative w-full h-14 sm:h-16 rounded-[21px] bg-[#0a0a0f] border border-[#2a2a3a] px-6 text-base sm:text-lg placeholder:text-gray-600 focus:outline-none focus:border-transparent transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 text-white font-medium",
-              error && "border-red-500/50",
-              className
-            )}
-            ref={ref}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            {...props}
-          />
-        </div>
+        <input
+          className={cn(
+            "w-full h-14 sm:h-16 rounded-2xl bg-gray-50 border-2 border-gray-200 px-6 text-base sm:text-lg placeholder:text-gray-400 focus:outline-none focus:border-blue-600 focus:bg-white transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 text-gray-900",
+            error && "border-red-500 focus:border-red-500",
+            className
+          )}
+          ref={ref}
+          {...props}
+        />
         {error && (
           <motion.p 
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-3 ml-2 text-xs font-bold text-red-400 uppercase tracking-widest"
+            className="mt-2 text-sm text-red-600"
           >
             {error}
           </motion.p>

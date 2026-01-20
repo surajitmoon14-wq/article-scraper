@@ -27,76 +27,56 @@ const steps = [
 
 export function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="relative py-32 overflow-hidden">
+    <section id="how-it-works" className="relative py-24 overflow-hidden bg-gray-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row items-center gap-20">
+        <div className="flex flex-col lg:flex-row items-center gap-16">
           <motion.div 
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.8 }}
             className="flex-1 text-center lg:text-left"
           >
-            <h2 className="text-4xl sm:text-6xl font-black text-white mb-8 tracking-tighter">
+            <h2 className="text-4xl sm:text-6xl font-black text-gray-900 mb-8 tracking-tight">
               The Pure <br/><span className="text-gray-500 italic">Workflow.</span>
             </h2>
-            <p className="text-xl text-gray-400 leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0">
+            <p className="text-xl text-gray-600 leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0">
               A seamless transition from cluttered web pages to a refined reading environment in three elegant steps.
             </p>
             
-            <div className="space-y-6">
+            <div className="space-y-4">
               {['End-to-end encryption', 'Official Guardian API', 'Zero data persistence'].map((item) => (
                 <div key={item} className="flex items-center gap-3 justify-center lg:justify-start">
-                  <div className="w-5 h-5 rounded-full bg-[#6366f1]/20 flex items-center justify-center">
-                    <CheckCircle2 className="w-3 h-3 text-[#6366f1]" />
+                  <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center">
+                    <CheckCircle2 className="w-4 h-4 text-blue-600" />
                   </div>
-                  <span className="text-sm font-bold text-gray-300 uppercase tracking-widest">{item}</span>
+                  <span className="text-sm font-semibold text-gray-700">{item}</span>
                 </div>
               ))}
             </div>
           </motion.div>
 
-          <div className="flex-1 w-full max-w-2xl relative">
-            {/* Organic connecting path (SVG) */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none hidden md:block" viewBox="0 0 400 600" fill="none">
-              <motion.path 
-                d="M200 100 C 200 200, 200 200, 200 300 C 200 400, 200 400, 200 500"
-                stroke="url(#grad-line)"
-                strokeWidth="2"
-                strokeDasharray="10 10"
-                initial={{ pathLength: 0 }}
-                whileInView={{ pathLength: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 2, ease: "easeInOut" }}
-              />
-              <defs>
-                <linearGradient id="grad-line" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#6366f1" />
-                  <stop offset="100%" stopColor="#3b82f6" />
-                </linearGradient>
-              </defs>
-            </svg>
-
-            <div className="relative z-10 space-y-12">
+          <div className="flex-1 w-full max-w-2xl">
+            <div className="space-y-6">
               {steps.map((step, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: index * 0.2, ease: [0.22, 1, 0.36, 1] }}
-                  className="group flex flex-col sm:flex-row items-center gap-8 p-8 rounded-[32px] bg-[#1a1a24] border border-[#2a2a3a] hover:bg-[#252532] transition-colors"
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="flex flex-col sm:flex-row items-center gap-6 p-6 rounded-2xl bg-white border-2 border-gray-200 hover:border-blue-300 hover:shadow-md transition-all"
                 >
                   <div 
-                    className="w-20 h-20 shrink-0 rounded-[24px] flex items-center justify-center transition-transform group-hover:scale-110 duration-500"
+                    className="w-16 h-16 shrink-0 rounded-2xl flex items-center justify-center"
                     style={{ backgroundColor: `${step.color}20`, color: step.color }}
                   >
-                    <step.icon className="w-10 h-10" />
+                    <step.icon className="w-8 h-8" />
                   </div>
                   <div className="text-center sm:text-left">
-                    <div className="text-xs font-black text-gray-500 uppercase tracking-[0.3em] mb-2">Step 0{index + 1}</div>
-                    <h3 className="text-2xl font-bold text-white mb-3 tracking-tight">{step.title}</h3>
-                    <p className="text-gray-400 font-medium leading-relaxed">{step.description}</p>
+                    <div className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Step 0{index + 1}</div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
+                    <p className="text-gray-600 leading-relaxed">{step.description}</p>
                   </div>
                 </motion.div>
               ))}

@@ -25,14 +25,14 @@ interface GuardianApiResponse {
   };
 }
 
-export async function scrapeArticle(url: string): Promise<ScrapeResult> {
+export async function scrapeArticle(urlOrArticleId: string): Promise<ScrapeResult> {
   const apiKey = process.env.GUARDIAN_API_KEY;
 
   if (!apiKey) {
     throw new Error('Guardian API key is not configured');
   }
 
-  const articleId = url.replace(/^https:\/\/www\.theguardian\.com\//, '');
+  const articleId = normalizeArticleId(urlOrArticleId);
 
   const apiUrl = `https://content.guardianapis.com/${articleId}?api-key=${apiKey}&show-fields=bodyText,headline,byline,publication`;
 
@@ -77,6 +77,15 @@ export async function scrapeArticle(url: string): Promise<ScrapeResult> {
     source: 'theguardian.com',
     word_count: wordCount,
   };
+}
+
+function normalizeArticleId(urlOrId: string): string {
+  try {
+    const parsed = new URL(urlOrId);
+    return parsed.pathname.replace(/^\/+/, '');
+  } catch {
+    return urlOrId.replace(/^\/+/, '').replace(/^https?:\/\/www\.theguardian\.com\//, '');
+  }
 }
 
 function countWords(text: string): number {

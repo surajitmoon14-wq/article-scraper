@@ -33,30 +33,27 @@ export function Navbar() {
       <div 
         className={`flex items-center gap-6 px-6 py-3 rounded-full border transition-all duration-500 pointer-events-auto ${
           scrolled 
-            ? 'bg-[#1a1a24] border-[#2a2a3a] shadow-[0_8px_32px_rgba(0,0,0,0.5)]' 
-            : 'bg-transparent border-transparent'
+            ? 'bg-white border-gray-200 shadow-lg' 
+            : 'bg-white/80 backdrop-blur-sm border-gray-100'
         }`}
-        style={{
-          boxShadow: scrolled ? '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(99, 102, 241, 0.1)' : 'none'
-        }}
       >
         <button
           onClick={() => scrollToSection('about')}
-          className="hidden sm:block text-xs uppercase tracking-widest text-gray-400 hover:text-[#6366f1] transition-colors duration-300"
+          className="hidden sm:block text-xs uppercase tracking-widest text-gray-600 hover:text-blue-600 transition-colors duration-300"
         >
           About
         </button>
 
         <div className="flex items-center gap-3">
-          <Logo size={32} />
-          <span className="text-lg font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+          <Logo size={32} glow={false} />
+          <span className="text-lg font-bold text-gray-900">
             EXTRACT
           </span>
         </div>
 
         <button
           onClick={() => scrollToSection('how-it-works')}
-          className="hidden sm:block text-xs uppercase tracking-widest text-gray-400 hover:text-[#6366f1] transition-colors duration-300"
+          className="hidden sm:block text-xs uppercase tracking-widest text-gray-600 hover:text-blue-600 transition-colors duration-300"
         >
           Process
         </button>
