@@ -17,7 +17,7 @@ export function Logo({ size = 32, glow = true }: { size?: number; glow?: boolean
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute inset-0 bg-[#6366f1] blur-xl rounded-full opacity-50"
+          className="absolute inset-0 bg-emerald-500 blur-xl rounded-full opacity-50"
         />
       )}
       <svg
@@ -30,9 +30,9 @@ export function Logo({ size = 32, glow = true }: { size?: number; glow?: boolean
       >
         <defs>
           <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#6366f1" />
-            <stop offset="50%" stopColor="#8b5cf6" />
-            <stop offset="100%" stopColor="#6366f1" />
+            <stop offset="0%" stopColor="#10b981" />
+            <stop offset="50%" stopColor="#34d399" />
+            <stop offset="100%" stopColor="#10b981" />
           </linearGradient>
           <filter id="innerGlow">
             <feGaussianBlur stdDeviation="1.5" result="blur" />

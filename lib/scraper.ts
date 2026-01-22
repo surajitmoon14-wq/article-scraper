@@ -6,6 +6,7 @@ export interface ScrapeResult {
   content_text: string;
   source: string;
   word_count: number;
+  thumbnail: string | null;
 }
 
 interface GuardianApiResponse {
@@ -19,6 +20,7 @@ interface GuardianApiResponse {
         headline?: string;
         byline?: string;
         publication?: string;
+        thumbnail?: string;
       };
       webPublicationDate: string;
     } | null;
@@ -34,7 +36,7 @@ export async function scrapeArticle(urlOrArticleId: string): Promise<ScrapeResul
 
   const articleId = normalizeArticleId(urlOrArticleId);
 
-  const apiUrl = `https://content.guardianapis.com/${articleId}?api-key=${apiKey}&show-fields=bodyText,headline,byline,publication`;
+  const apiUrl = `https://content.guardianapis.com/${articleId}?api-key=${apiKey}&show-fields=bodyText,headline,byline,publication,thumbnail`;
 
   const response = await fetch(apiUrl);
 
@@ -76,6 +78,7 @@ export async function scrapeArticle(urlOrArticleId: string): Promise<ScrapeResul
     content_text: contentText,
     source: 'theguardian.com',
     word_count: wordCount,
+    thumbnail: content.fields?.thumbnail || null,
   };
 }
 

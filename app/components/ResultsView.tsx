@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from './ui/Button';
 import { Check, Calendar, User, Hash, Copy, Share2, BookOpen } from 'lucide-react';
+import Image from 'next/image';
 
 interface ResultsViewProps {
   data: {
@@ -14,6 +15,7 @@ interface ResultsViewProps {
     content_text: string;
     source: string;
     word_count: number;
+    thumbnail: string | null;
   };
 }
 
@@ -57,27 +59,48 @@ export function ResultsView({ data }: ResultsViewProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-lg"
+      transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+      className="bg-white/90 border border-emerald-100 rounded-[3rem] overflow-hidden shadow-[0_40px_100px_rgba(16,185,129,0.1)] backdrop-blur-xl relative"
     >
-      <header className="px-8 sm:px-16 pt-16 pb-12 text-center border-b border-gray-200">
+      {/* Decorative accent */}
+      <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 via-teal-500 to-emerald-400" />
+
+      <header className="px-8 sm:px-20 pt-20 pb-16 text-center border-b border-emerald-50 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold uppercase tracking-wide mb-8"
+          transition={{ delay: 0.2 }}
+          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-black uppercase tracking-[0.2em] mb-12 shadow-sm"
         >
-          <BookOpen className="w-3 h-3" />
-          Article Extracted
+          <BookOpen className="w-4 h-4" />
+          Purification Complete
         </motion.div>
 
+        {data.thumbnail && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="mb-16 relative aspect-[21/9] w-full max-w-4xl mx-auto overflow-hidden rounded-[2.5rem] shadow-2xl group"
+          >
+            <Image 
+              src={data.thumbnail} 
+              alt={data.title}
+              fill
+              className="object-cover transition-transform duration-1000 group-hover:scale-105"
+              unoptimized
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          </motion.div>
+        )}
+
         <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-3xl sm:text-5xl font-black text-gray-900 mb-8 tracking-tight leading-tight max-w-4xl mx-auto"
+          transition={{ delay: 0.5, duration: 0.8 }}
+          className="text-4xl sm:text-6xl lg:text-7xl font-black text-slate-900 mb-10 tracking-tighter leading-[1.1] max-w-5xl mx-auto"
         >
           {data.title}
         </motion.h2>
@@ -85,69 +108,81 @@ export function ResultsView({ data }: ResultsViewProps) {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="flex flex-wrap items-center justify-center gap-6 text-sm font-semibold text-gray-600"
+          transition={{ delay: 0.6 }}
+          className="flex flex-wrap items-center justify-center gap-10 text-sm font-black text-slate-500/60 uppercase tracking-widest"
         >
           {data.author && (
-            <div className="flex items-center gap-2">
-              <User className="w-4 h-4 text-blue-600" />
-              <span>{data.author}</span>
+            <div className="flex items-center gap-3 group">
+              <div className="p-2 rounded-full bg-emerald-50 group-hover:bg-emerald-100 transition-colors">
+                <User className="w-4 h-4 text-emerald-600" />
+              </div>
+              <span className="text-slate-700">{data.author}</span>
             </div>
           )}
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-blue-600" />
-            <span>{formatDate(data.published_date)}</span>
+          <div className="flex items-center gap-3 group">
+            <div className="p-2 rounded-full bg-emerald-50 group-hover:bg-emerald-100 transition-colors">
+              <Calendar className="w-4 h-4 text-emerald-600" />
+            </div>
+            <span className="text-slate-700">{formatDate(data.published_date)}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <Hash className="w-4 h-4 text-blue-600" />
-            <span>{data.word_count.toLocaleString()} words</span>
+          <div className="flex items-center gap-3 group">
+            <div className="p-2 rounded-full bg-emerald-50 group-hover:bg-emerald-100 transition-colors">
+              <Hash className="w-4 h-4 text-emerald-600" />
+            </div>
+            <span className="text-slate-700">{data.word_count.toLocaleString()} Words</span>
           </div>
         </motion.div>
       </header>
 
-      <div className="px-8 sm:px-16 py-12">
-        <div className="flex items-center justify-between mb-12">
-          <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Article Content</h3>
-          <div className="flex gap-4">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={copyToClipboard}
-            >
-              {showToast ? (
-                <span className="flex items-center gap-2 text-green-600">
-                  <Check className="w-4 h-4" />
-                  Copied
-                </span>
-              ) : (
-                <span className="flex items-center gap-2">
-                  <Copy className="w-4 h-4" />
-                  Copy Text
-                </span>
-              )}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-            >
-              <Share2 className="w-4 h-4" />
-            </Button>
-          </div>
+      <div className="px-8 sm:px-20 py-20 relative z-10 bg-white/30 backdrop-blur-sm">
+        <div className="flex items-center justify-between mb-20 max-w-4xl mx-auto">
+          <div className="h-px bg-emerald-100 flex-1" />
+          <h3 className="px-8 text-xs font-black text-emerald-800/30 uppercase tracking-[0.4em] whitespace-nowrap">Content</h3>
+          <div className="h-px bg-emerald-100 flex-1" />
         </div>
 
         <article
-          className="prose prose-lg max-w-3xl mx-auto prose-p:text-gray-700 prose-p:leading-relaxed prose-p:text-lg sm:prose-p:text-xl prose-headings:text-gray-900 prose-headings:font-bold prose-strong:text-gray-900"
+          className="prose prose-emerald prose-xl max-w-4xl mx-auto prose-p:text-slate-700 prose-p:leading-[2] prose-p:text-lg sm:prose-p:text-2xl prose-headings:text-slate-900 prose-headings:font-black prose-strong:text-emerald-900 prose-img:rounded-3xl"
           dangerouslySetInnerHTML={{ __html: data.content_html }}
         />
+
+        <div className="mt-24 flex justify-center gap-6">
+          <Button
+            type="button"
+            size="lg"
+            variant="primary"
+            onClick={copyToClipboard}
+            className="rounded-2xl px-12"
+          >
+            {showToast ? (
+              <span className="flex items-center gap-3">
+                <Check className="w-6 h-6" />
+                Copied
+              </span>
+            ) : (
+              <span className="flex items-center gap-3">
+                <Copy className="w-6 h-6" />
+                Copy Purified Text
+              </span>
+            )}
+          </Button>
+          <Button
+            type="button"
+            size="lg"
+            variant="secondary"
+            className="rounded-2xl w-16 px-0"
+          >
+            <Share2 className="w-6 h-6" />
+          </Button>
+        </div>
       </div>
 
-      <footer className="px-8 sm:px-16 py-8 bg-gray-50 border-t border-gray-200 text-center">
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-          Source: {data.source}
+      <footer className="px-8 sm:px-20 py-12 bg-emerald-50/40 border-t border-emerald-100 text-center relative z-10">
+        <p className="text-xs font-black text-emerald-800/30 uppercase tracking-[0.5em]">
+          Origin: {data.source}
         </p>
       </footer>
+
 
       <AnimatePresence>
         {showToast && (
@@ -155,9 +190,9 @@ export function ResultsView({ data }: ResultsViewProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 bg-blue-600 text-white rounded-full font-bold shadow-lg"
+            className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] px-8 py-4 bg-emerald-600 text-white rounded-full font-black shadow-2xl shadow-emerald-900/20"
           >
-            Copied to clipboard
+            Purified text copied to clipboard
           </motion.div>
         )}
       </AnimatePresence>
