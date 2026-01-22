@@ -30,17 +30,23 @@ export function Button({
 
   const variants = {
     primary:
-      'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl',
+      'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-200/50',
     secondary:
-      'bg-gray-200 hover:bg-gray-300 text-gray-900 border border-gray-300',
+      'bg-white/50 backdrop-blur-md text-emerald-900 border border-emerald-100 hover:bg-white/80',
     outline:
-      'border-2 border-gray-300 bg-transparent text-gray-700 hover:bg-gray-50 hover:border-gray-400',
+      'border-2 border-emerald-100 bg-transparent text-emerald-800 hover:bg-emerald-50 hover:border-emerald-200',
   };
 
   const sizes = {
     sm: 'h-10 px-6 text-xs uppercase tracking-widest',
     md: 'h-12 px-8 text-sm uppercase tracking-widest',
     lg: 'h-16 px-12 text-base uppercase tracking-widest',
+  };
+
+  const rippleEffect = {
+    initial: { scale: 0, opacity: 0.5 },
+    animate: { scale: 4, opacity: 0 },
+    transition: { duration: 0.6, ease: "easeOut" }
   };
 
   return (
@@ -64,6 +70,14 @@ export function Button({
           </>
         ) : children}
       </div>
+
+      {/* Ripple Animation on Click */}
+      <motion.div
+        className="absolute inset-0 bg-white/20 rounded-full"
+        variants={rippleEffect}
+        initial="initial"
+        whileTap="animate"
+      />
     </motion.button>
   );
 }

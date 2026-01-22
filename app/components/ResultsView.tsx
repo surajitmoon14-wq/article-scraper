@@ -14,6 +14,7 @@ interface ResultsViewProps {
     content_text: string;
     source: string;
     word_count: number;
+    thumbnail: string | null;
   };
 }
 
@@ -60,24 +61,39 @@ export function ResultsView({ data }: ResultsViewProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-lg"
+      className="bg-white/80 border border-emerald-100 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-emerald-900/5 backdrop-blur-md"
     >
-      <header className="px-8 sm:px-16 pt-16 pb-12 text-center border-b border-gray-200">
+      <header className="px-8 sm:px-16 pt-16 pb-12 text-center border-b border-emerald-50">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold uppercase tracking-wide mb-8"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-black uppercase tracking-widest mb-8"
         >
           <BookOpen className="w-3 h-3" />
-          Article Extracted
+          Article Purified
         </motion.div>
+
+        {data.thumbnail && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="mb-12 relative aspect-video w-full max-w-3xl mx-auto overflow-hidden rounded-[2rem] shadow-xl"
+          >
+            <img 
+              src={data.thumbnail} 
+              alt={data.title}
+              className="object-cover w-full h-full"
+            />
+          </motion.div>
+        )}
 
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-3xl sm:text-5xl font-black text-gray-900 mb-8 tracking-tight leading-tight max-w-4xl mx-auto"
+          transition={{ delay: 0.3 }}
+          className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 mb-8 tracking-tighter leading-tight max-w-4xl mx-auto"
         >
           {data.title}
         </motion.h2>
@@ -85,38 +101,39 @@ export function ResultsView({ data }: ResultsViewProps) {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="flex flex-wrap items-center justify-center gap-6 text-sm font-semibold text-gray-600"
+          transition={{ delay: 0.4 }}
+          className="flex flex-wrap items-center justify-center gap-8 text-sm font-bold text-slate-500"
         >
           {data.author && (
             <div className="flex items-center gap-2">
-              <User className="w-4 h-4 text-blue-600" />
+              <User className="w-4 h-4 text-emerald-600" />
               <span>{data.author}</span>
             </div>
           )}
           <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-blue-600" />
+            <Calendar className="w-4 h-4 text-emerald-600" />
             <span>{formatDate(data.published_date)}</span>
           </div>
           <div className="flex items-center gap-2">
-            <Hash className="w-4 h-4 text-blue-600" />
+            <Hash className="w-4 h-4 text-emerald-600" />
             <span>{data.word_count.toLocaleString()} words</span>
           </div>
         </motion.div>
       </header>
 
-      <div className="px-8 sm:px-16 py-12">
-        <div className="flex items-center justify-between mb-12">
-          <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Article Content</h3>
+      <div className="px-8 sm:px-16 py-16">
+        <div className="flex items-center justify-between mb-16">
+          <h3 className="text-xs font-black text-emerald-800/40 uppercase tracking-[0.2em]">Article Content</h3>
           <div className="flex gap-4">
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={copyToClipboard}
+              className="border-emerald-100 hover:bg-emerald-50 hover:border-emerald-200 text-emerald-800"
             >
               {showToast ? (
-                <span className="flex items-center gap-2 text-green-600">
+                <span className="flex items-center gap-2 text-emerald-600">
                   <Check className="w-4 h-4" />
                   Copied
                 </span>
@@ -131,6 +148,7 @@ export function ResultsView({ data }: ResultsViewProps) {
               type="button"
               variant="outline"
               size="sm"
+              className="border-emerald-100 hover:bg-emerald-50 hover:border-emerald-200 text-emerald-800"
             >
               <Share2 className="w-4 h-4" />
             </Button>
@@ -138,13 +156,13 @@ export function ResultsView({ data }: ResultsViewProps) {
         </div>
 
         <article
-          className="prose prose-lg max-w-3xl mx-auto prose-p:text-gray-700 prose-p:leading-relaxed prose-p:text-lg sm:prose-p:text-xl prose-headings:text-gray-900 prose-headings:font-bold prose-strong:text-gray-900"
+          className="prose prose-emerald prose-lg max-w-3xl mx-auto prose-p:text-slate-700 prose-p:leading-[1.8] prose-p:text-lg sm:prose-p:text-xl prose-headings:text-slate-900 prose-headings:font-black prose-strong:text-emerald-900"
           dangerouslySetInnerHTML={{ __html: data.content_html }}
         />
       </div>
 
-      <footer className="px-8 sm:px-16 py-8 bg-gray-50 border-t border-gray-200 text-center">
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+      <footer className="px-8 sm:px-16 py-10 bg-emerald-50/30 border-t border-emerald-50 text-center">
+        <p className="text-xs font-black text-emerald-800/40 uppercase tracking-[0.3em]">
           Source: {data.source}
         </p>
       </footer>
@@ -155,9 +173,9 @@ export function ResultsView({ data }: ResultsViewProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 bg-blue-600 text-white rounded-full font-bold shadow-lg"
+            className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] px-8 py-4 bg-emerald-600 text-white rounded-full font-black shadow-2xl shadow-emerald-900/20"
           >
-            Copied to clipboard
+            Purified text copied to clipboard
           </motion.div>
         )}
       </AnimatePresence>

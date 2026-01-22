@@ -33,27 +33,27 @@ export function Navbar() {
       <div 
         className={`flex items-center gap-6 px-6 py-3 rounded-full border transition-all duration-500 pointer-events-auto ${
           scrolled 
-            ? 'bg-white border-gray-200 shadow-lg' 
-            : 'bg-white/80 backdrop-blur-sm border-gray-100'
+            ? 'bg-white/90 border-emerald-200 shadow-lg backdrop-blur-md' 
+            : 'bg-white/60 backdrop-blur-sm border-white/40 shadow-sm'
         }`}
       >
         <button
           onClick={() => scrollToSection('about')}
-          className="hidden sm:block text-xs uppercase tracking-widest text-gray-600 hover:text-blue-600 transition-colors duration-300"
+          className="hidden sm:block text-xs uppercase tracking-widest text-emerald-800 hover:text-emerald-500 transition-colors duration-300 font-bold"
         >
-          About
+          Features
         </button>
 
         <div className="flex items-center gap-3">
-          <Logo size={32} glow={false} />
-          <span className="text-lg font-bold text-gray-900">
-            EXTRACT
+          <Logo size={32} glow={scrolled} />
+          <span className="text-lg font-black tracking-tighter text-emerald-950">
+            PURE
           </span>
         </div>
 
         <button
           onClick={() => scrollToSection('how-it-works')}
-          className="hidden sm:block text-xs uppercase tracking-widest text-gray-600 hover:text-blue-600 transition-colors duration-300"
+          className="hidden sm:block text-xs uppercase tracking-widest text-emerald-800 hover:text-emerald-500 transition-colors duration-300 font-bold"
         >
           Process
         </button>

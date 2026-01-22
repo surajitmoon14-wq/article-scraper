@@ -51,15 +51,15 @@ export function ScraperForm({ onScrape, isLoading, externalError }: ScraperFormP
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-white rounded-3xl p-6 sm:p-10 shadow-lg border border-gray-200"
+      className="glass rounded-[2rem] p-4 sm:p-6 shadow-2xl shadow-emerald-900/5 border border-white/40"
     >
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="relative group">
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-600 transition-colors">
-            <Globe className="w-5 h-5" />
+          <div className="absolute left-6 top-1/2 -translate-y-1/2 text-emerald-600/50 group-focus-within:text-emerald-600 transition-colors z-10">
+            <Globe className="w-6 h-6" />
           </div>
           <Input
-            placeholder="https://www.theguardian.com/..."
+            placeholder="Paste Guardian article link..."
             value={url}
             onChange={(e) => {
               setUrl(e.target.value);
@@ -69,35 +69,49 @@ export function ScraperForm({ onScrape, isLoading, externalError }: ScraperFormP
             disabled={isLoading}
             inputMode="url"
             autoComplete="off"
-            className="pl-12"
+            className="pl-16 h-20 text-lg rounded-2xl bg-white/40 border-emerald-100 focus:border-emerald-300 focus:ring-emerald-200/20 transition-all placeholder:text-emerald-800/30"
           />
+          
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:block">
+            <Button
+              type="submit"
+              className="h-14 px-8 text-base font-black rounded-xl bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-200"
+              disabled={disabled}
+              isLoading={isLoading}
+              loadingText="Purifying..."
+            >
+              Start Extraction
+            </Button>
+          </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center gap-6">
+        <div className="sm:hidden">
           <Button
             type="submit"
-            className="w-full sm:w-auto h-14 px-8 text-base font-bold"
+            className="w-full h-16 text-base font-black rounded-xl bg-emerald-600 hover:bg-emerald-700"
             disabled={disabled}
             isLoading={isLoading}
-            loadingText="Deconstructing..."
+            loadingText="Purifying..."
           >
             Start Extraction
           </Button>
-
-          <AnimatePresence>
-            {externalError && (
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                className="flex items-center gap-2 text-red-600 font-medium text-sm bg-red-50 px-4 py-2 rounded-full border border-red-200"
-              >
-                <AlertCircle className="w-4 h-4" />
-                {externalError}
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
+
+        <AnimatePresence>
+          {(error || externalError) && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="flex items-center gap-2 text-red-600 font-bold text-sm bg-red-50/50 backdrop-blur-sm px-6 py-3 rounded-xl border border-red-100 mt-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                {error || externalError}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </form>
     </motion.div>
   );
