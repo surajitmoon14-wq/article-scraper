@@ -123,34 +123,61 @@ export default function Home() {
             >
               <button
                 onClick={scrollToExtractor}
-                className="px-10 py-4 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-lg transition-all duration-300 shadow-xl shadow-emerald-200/50 hover:shadow-emerald-300/50 flex items-center gap-3 active:scale-95 group"
+                className="px-12 py-5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xl transition-all duration-500 shadow-[0_20px_40px_rgba(16,185,129,0.3)] hover:shadow-[0_25px_50px_rgba(16,185,129,0.4)] flex items-center gap-4 active:scale-95 group relative overflow-hidden"
               >
-                Start Extraction
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <span className="relative z-10">Start Extraction</span>
+                <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform relative z-10" />
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                />
               </button>
               
               <button
                 onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
-                className="px-10 py-4 rounded-full bg-white/50 backdrop-blur-md border border-emerald-100 text-emerald-900 font-bold text-lg transition-all duration-300 hover:bg-white/80 flex items-center gap-2 active:scale-95"
+                className="px-12 py-5 rounded-2xl bg-white/60 backdrop-blur-md border border-emerald-100 text-emerald-950 font-black text-xl transition-all duration-500 hover:bg-white/90 flex items-center gap-2 active:scale-95 shadow-lg shadow-emerald-900/5 hover:border-emerald-300"
               >
                 Learn More
               </button>
             </motion.div>
           </div>
+
+          {/* Floating Wave Behind Content */}
+          <motion.div 
+            animate={{ 
+              y: [0, -20, 0],
+              rotate: [0, 2, 0]
+            }}
+            transition={{ 
+              duration: 8, 
+              repeat: Infinity, 
+              ease: "easeInOut" 
+            }}
+            className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[150%] h-[30%] opacity-20 pointer-events-none"
+          >
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-full fill-emerald-400">
+              <path d="M0,60 C150,110 300,10 450,60 C600,110 750,10 900,60 C1050,110 1200,60 1200,60 V120 H0 Z" />
+            </svg>
+          </motion.div>
         </section>
 
         {/* Tool Section */}
-        <section id="extractor" className="relative py-32 px-4 flex flex-col items-center">
+        <section id="extractor" className="relative py-48 px-4 flex flex-col items-center overflow-hidden">
+          {/* Section Decoration */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.03),transparent_70%)] pointer-events-none" />
+
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-16"
+            className="text-center mb-20 relative z-10"
           >
-            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 mb-6 tracking-tight">Article Extractor</h2>
-            <p className="text-slate-600 max-w-xl mx-auto text-lg">
-              Paste your Guardian article link below and let us purify the content.
+            <h2 className="text-4xl sm:text-6xl font-black text-slate-900 mb-8 tracking-tighter leading-tight">
+              Ready to <span className="text-emerald-600 italic">Purify?</span>
+            </h2>
+            <p className="text-slate-600 max-w-2xl mx-auto text-xl leading-relaxed font-medium">
+              Join thousands of readers who have rediscovered the joy of pure focus. 
+              Paste your article link below to begin.
             </p>
           </motion.div>
 
@@ -158,6 +185,7 @@ export default function Home() {
             <ScraperForm onScrape={handleScrape} isLoading={isLoading} externalError={error} />
           </div>
         </section>
+
 
 
         {/* Results Section */}

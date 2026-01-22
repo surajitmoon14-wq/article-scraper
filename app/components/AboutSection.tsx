@@ -37,48 +37,58 @@ const features = [
 
 export function AboutSection() {
   return (
-    <section id="about" className="relative py-32 overflow-hidden bg-white/30 backdrop-blur-md">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="about" className="relative py-48 overflow-hidden">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-20"
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center mb-32"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 border border-emerald-200 mb-6">
-            <Sparkles className="w-4 h-4 text-emerald-600" />
-            <span className="text-xs font-black uppercase tracking-widest text-emerald-800">The Experience</span>
-          </div>
-          <h2 className="text-4xl sm:text-6xl font-black text-slate-900 mb-8 tracking-tighter">
-            Designed for <br/><span className="italic text-emerald-600">Pure Clarity.</span>
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+            className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-emerald-50 border border-emerald-100 mb-10 shadow-sm"
+          >
+            <Sparkles className="w-5 h-5 text-emerald-600" />
+            <span className="text-xs font-black uppercase tracking-[0.3em] text-emerald-800">The Pure Experience</span>
+          </motion.div>
+          
+          <h2 className="text-5xl sm:text-8xl font-black text-slate-900 mb-10 tracking-tighter leading-tight">
+            Elevating <br/><span className="italic bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">Digital Focus.</span>
           </h2>
-          <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            We believe that great journalism deserves a great reading environment. 
-            Pure is more than a tool—it&apos;s a sanctuary for your mind.
+          <p className="text-xl sm:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-medium">
+            Beyond extraction, we offer a sanctuary. Every article is a journey into 
+            uninterrupted thought and absolute clarity.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-16">
           {features.map((feature, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              whileHover={{ y: -10, scale: 1.02 }}
+              transition={{ duration: 0.8, delay: index * 0.15 }}
+              whileHover={{ y: -20 }}
               className="group"
             >
-              <div className="h-full p-8 sm:p-10 rounded-[2.5rem] bg-white/80 border border-emerald-100/50 hover:border-emerald-300 hover:shadow-2xl hover:shadow-emerald-900/5 transition-all duration-500 glass-emerald">
-                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} p-4 mb-8 shadow-lg shadow-emerald-200 group-hover:animate-float`}>
+              <div className="h-full p-10 sm:p-14 rounded-[3.5rem] bg-white/60 border border-emerald-100 shadow-[0_20px_50px_rgba(16,185,129,0.05)] hover:shadow-[0_40px_100px_rgba(16,185,129,0.1)] hover:border-emerald-300 transition-all duration-700 glass-emerald backdrop-blur-md relative overflow-hidden">
+                {/* Decorative background element */}
+                <div className="absolute -top-20 -right-20 w-64 h-64 bg-emerald-50 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                
+                <div className={`relative z-10 inline-flex items-center justify-center w-20 h-20 rounded-[2rem] bg-gradient-to-br ${feature.color} p-5 mb-10 shadow-2xl shadow-emerald-500/20 group-hover:scale-110 group-hover:rotate-6 transition-all duration-700`}>
                   <feature.icon className="w-full h-full text-white" />
                 </div>
                 
-                <h3 className="text-2xl sm:text-3xl font-black text-slate-900 mb-4 tracking-tight">
+                <h3 className="relative z-10 text-3xl sm:text-4xl font-black text-slate-900 mb-6 tracking-tight">
                   {feature.title}
                 </h3>
-                <p className="text-slate-600 leading-relaxed text-lg">
+                <p className="relative z-10 text-slate-600 leading-relaxed text-xl font-medium">
                   {feature.description}
                 </p>
               </div>
